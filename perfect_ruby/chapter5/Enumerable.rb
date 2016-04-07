@@ -35,3 +35,45 @@ end
 end
 #Floatではsuccを呼び出せない
 0.0.succ # NoMethod
+
+# 元の配列を書く要素を変換して新しい配列を作る際に
+['ruby', 'rails'].map {|str| str.upcase} # ["RUBY','RAILS']
+
+# 要素の真偽を調べる
+# すべての要素が真ならばtrueを返す
+[true, true, true].all? # true
+[false, true, true].all? # false
+
+# すべての要素が偽ならばtrueを返す
+[false, false, false].none? # true
+
+# 1つでも真の要素があればtrueを返す
+[true, true, false].any? # true
+[false, false, false].any? # false
+
+# 1つだけ真であればtrueを返す
+[true, false, false].one? # true
+
+# true, false以外も使える
+['aaa', 'bbb', 'ccc'].all? # true
+
+# ブロックを受け取ることができる
+[4,4,2,3].all? {|v| v.is_a?(Integer)} # true
+[4,4,'two'].all? {|v| v.is_a?(Integer)} # false
+
+# 部分的な要素の取得
+%w(Alice Bob Charlie).grep(/a/i) #["Alice", "Charlie"] /a/iにマッチする要素
+['a','b',3,4].grep(String) # ["a", "b"]である要素
+
+#あるオブジェクトのメソッド一覧から述語メソッドを取得する
+object = Object.new
+object.methods.grep(/\?/) # ni? :eql?, tailted?...
+
+# 戻り値が最初に真になった要素を返す
+array = [4,4,2,3]
+array.detect {|v| v.even?} # 4
+
+# ブロックの戻り値が真となった要素をすべて返す
+array = [4,4,2,3]
+array.select {|v| v.even? }
+array.reject {|v| v.even? }
