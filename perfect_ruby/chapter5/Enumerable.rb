@@ -77,3 +77,14 @@ array.detect {|v| v.even?} # 4
 array = [4,4,2,3]
 array.select {|v| v.even? }
 array.reject {|v| v.even? }
+
+array = [1,2,3,4,5]
+
+# 先頭から任意の数の要素を配列として返す
+array.take(3) # 1,2,3
+# 先頭から任意の数の要素をsikipして配列として返す
+array.drop(3) # 4,5
+
+# ブロックが最初の偽を返すまで要素の配列を返す
+array.take_while{|n| n < 3 } # 1,2
+array.drop_while{|n| n < 3 } # 3,4,5
