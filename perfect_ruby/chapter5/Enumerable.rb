@@ -88,3 +88,131 @@ array.drop(3) # 4,5
 # ブロックが最初の偽を返すまで要素の配列を返す
 array.take_while{|n| n < 3 } # 1,2
 array.drop_while{|n| n < 3 } # 3,4,5
+
+# 畳込み演算
+[4, 4, 2, 3].inject(0) {|result, num|
+  result + num
+} # 13
+# 初期値を指定しない。先頭の要素が初期値として使用され2番目以降の要素が繰り返される
+[4, 4, 2, 3].inject {|result, num|
+  result + num
+} # 13
+
+# 繰り返しの度に呼び出すメソッドをシンボルで受け取ることもできる
+[4,4,2,3].inject(:+) #13
+
+# 繰り返しとオブジェクトの更新
+# Enumerable#each_with_objectは要素を繰り返しながら1つのオブジェクトを更新していく
+# 配列、文字列、ハッシュなどを初期値に指定する
+%w(Alice Bob Charlie).each_with_object({}) {|name, result|
+  result[name] = name.length
+} # Alice =>5, Bob=>3,
+
+# 要素のグルーピング
+## 整数と浮動小数の配列
+array = [1,2.0,3.0,4]
+
+array.group_by {|val| val.class } # => {Fixnum=>[1, 4], Float=>[2.0, 3.0]}
+array.partition {|n| n.even? } # => [[2, 4], [1, 3, 5]]
+
+# 最小値と最大値
+range = (1..10)
+range.max # =>10
+range.min # => 1
+range.minmax # [1,10]
+# 自分で最小・最大の基準を指定
+people = %w(Alice Bob Charlie)
+people.min_by {|s| s.length} # bob
+people.max_by {|s| s.length} # Charlie
+people.minmax_by {|s| s.length} # ["Bob", "Charlie"]
+
+# sort
+people = %w(Bob Alice Charlie)
+# 要素でソート
+people.sort
+# 要素の長さで
+people.sort {|a, b| a.length <=> b.length }
+people.sort_by {|name| name.length }
+### sort/sort_byは安定なソートでないので、比較結果が同じソートは実行によって順番が変わる可能性がある
+
+# EnumerableでincludeされているArray
+# 第一引数に配列の長さ、第二引数に要素を指定
+Array.new(5, 1) # [1,1,1,1,1]
+
+# すべての要素は同じオブジェクト。一つに破壊的操作をするとすべてに影響する
+array = Array.new(3, 'naive')
+array[0].reverse!
+array # ["evian", "evian","evian]
+
+Array.new(3) {|index| index.succ} # [1,2,3]
+
+array = [4,4,2,3]
+
+array.length
+array.empty? # false
+[].empty? # true
+array.include?(4) # true
+
+# 演算子メソッド
+[1,2,3] + [4,5] # [1,2,3,4,5]
+#要素を取り除く
+[4,4,2,3] - [4,3] # 2
+# 共通の要素からなる配列
+[1,2,3] & [2,3,4] # [2,3]
+# n回繰り返した配列
+[1,2,3] * 2 # [1,2,3,1,2,3]
+
+# 要素の取得
+array = [4,4,2,3]
+
+# 添字参照
+array[2] # 2
+# 開始位置と長さ、添字を範囲指定できる
+array[2.2] # [2,3]
+array[2..4] # [2,3]
+
+# 複数の添字の要素を配列で返す
+array = [4,4,2,3]
+array.values_at(1)   # [4]
+array.values_at(1,3) # [4,3]
+
+# 先頭・末尾の要素を得る
+array.first # 4
+# 先頭からn個
+array.first(2) # [4,4]
+# 末尾
+array.last #3
+# 末尾からn個取得
+array.last(2) # [2,3]
+
+# ランダムな要素を返す
+array.sample # 3
+array.samplt(2) # => [3,4]
+
+# 配列から特定のキーをもつ要素を返す
+ary = [[:foo, 4], [:bar, 2], [:baz, 3]]
+ary.assoc(:bar) # [:bar,2]
+
+# 要素の追加と削除
+array = [4,4,2,3]
+
+# 0番目の位置に代入
+array[0] = 5
+array # => [5,4,2,3]
+# 配列の要素数を超える場合はnil埋めされる
+array[10] = 1
+array # [5,4,2,3,nil,nil,nil,nil,nil,nil,1]
+
+# 末尾に追加
+array = [4,4,2]
+array << 3 # [4,4,2,3]
+array.push 3 # [4,4,2,3,3]
+# 取り出す
+array.pop # 3
+array # [4,4,2,3]
+
+# 先頭に要素の追加、取り出し
+array = [4,4,2,3]
+array.shift # 4
+array # [4,2,3]
+array.unshift 4 # [4,4,2,3]
